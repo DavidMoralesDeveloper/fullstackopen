@@ -1,9 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-
-
-
 const App = () => {
   const course = 'Half Stack application development'
   const parts = [
@@ -21,38 +18,35 @@ const App = () => {
     }
   ]
 
-  const Header = (props) => <h1>{props.couser}</h1>
+  const Header = ({ course }) => <h1>{course}</h1>
 
-  const Part = (props) => {
-    return <p> {props.part} {props.exercises} </p>
-  }
+  // const Part = (props) => {
+  //   return <p> {props.part} {props.exercises} </p>
+  // }
 
-  const Content = () => {
+  // const Content = (props) => {
+  //   return (
+  //     <div>
+  //       <Part part={name} exercises={exercises} />
+  //       <Part part={name} exercises={exercises} />
+  //       <Part part={name} exercises={exercises} />
+  //     </div>
+  //   )
+  // }
 
-    return (
-      <div>
-        <Part part={parts[0].name} exercises={parts[0].exercises} />
-        <Part part={parts[1].name} exercises={parts[1].exercises} />
-        <Part part={parts[2].name} exercises={parts[2].exercises} />
+  // const Total = (props) => {
 
-      </div>
-    )
-  }
-
-  const Total = (props) => {
-    return <p> Number of exercises exercises={parts[0].exercises + parts[0].exercises + parts[0].exercises} </p>
-  }
+  //   return <p>Number of exercises {props.exercises}</p>
+  // }
 
   return (
-    <>
-      <div>
-        <Header couser={course} />
+    <div>
+      <Header course={course} />
 
-        <Content parts={parts} />
+      {/* <Content />      */}
 
-        <Total parts={parts} />
-      </div>
-    </>
+      {/* <Total  /> */}
+    </div>
   )
 }
 
