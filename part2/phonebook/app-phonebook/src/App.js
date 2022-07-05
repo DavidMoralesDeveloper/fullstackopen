@@ -52,9 +52,7 @@ const App = () => {
   }
 
   const handleSearchName = (event) => {
-    setSearchName(event.target.value)
-    console.log(event.target.value)
-    
+    setSearchName(event.target.value)    
   }
 
 
