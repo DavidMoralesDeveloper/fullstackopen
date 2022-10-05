@@ -1,26 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personsServices from './services/persons'
+
 
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([])
+   
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
 
-  const filterletters = persons.filter(person => person.name.toLocaleLowerCase().includes(searchName.toLocaleLowerCase()))
-   
-   
+  useEffect(() => {
+    personsServices.getAll().then(initialPerson => setPersons(initialPerson) )
+  }, [])
 
-  // -----------------
+
+   
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -35,11 +35,15 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
-    }
 
+      personsServices.create(personObject).then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+
+      })
+      
+    }
 
   }
 
@@ -55,7 +59,17 @@ const App = () => {
     setSearchName(event.target.value)    
   }
 
+  const handleDeletePerson =  (event, name) => {
+    console.log('click me ')
+    if(window.confirm(`Delete ${name} ?`) ) {
+      personsServices.remove(event.target.id).then(() => {
+        setPersons(persons.filter(person => person.name !== name))
+      })
+    }
+  }
 
+  
+  const filterletters = persons.filter(person => person.name.toLocaleLowerCase().includes(searchName.toLocaleLowerCase()))
 
 
   return (
@@ -73,20 +87,15 @@ const App = () => {
         newNumber={newNumber}
         handleNewname={handleNewname}
         handleNewNumber={handleNewNumber}
+        
 
        />
 
       <h2>Numbers</h2>
 
-      <Persons filterletters={filterletters} />
+      <Persons filterletters={filterletters} handleDeletePerson={handleDeletePerson}  />
 
       
-
-      
-
-
-
-
 
 
 
