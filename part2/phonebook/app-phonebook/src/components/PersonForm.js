@@ -1,15 +1,15 @@
 import React from 'react'
 
-const PersonForm = ( {addPerson, newName, newNumber, handleNewname, handleNewNumber}) => {
+const PersonForm = ({ addPerson, newName, newNumber, handleNewname, handleNewNumber }) => {
     return (
         <div>
             <form onSubmit={addPerson} >
                 <div>
-                    Name: 
+                    Name:
                     <input type='text' value={newName} onChange={handleNewname} placeholder='Name' />
                 </div>
                 <div>
-                    Number: 
+                    Number:
                     <input type='number' value={newNumber} onChange={handleNewNumber} placeholder='Number' />
                 </div>
 
