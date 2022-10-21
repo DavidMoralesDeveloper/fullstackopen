@@ -1,24 +1,15 @@
+const { response, request, json } = require('express')
 const express = require('express')
-const morgan = require('morgan')
-morgan.token('body', (request) => { return JSON.stringify(request.body) })
-const cors = require('cors')
-
+const corts = require('cors')
 const app = express()
 
-app.use(express.json())
-app.use(cors())
+
+const morgan = require('morgan')
+morgan.token('body', (request) => { return JSON.stringify(request.body) })
+
 app.use(express.static('build'))
-
-
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
-app.use(requestLogger)
-
+app.use(corts)
+app.use(express.json())
 
 
 let persons = [
@@ -44,6 +35,15 @@ let persons = [
   }
 ]
 
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+app.use(requestLogger)
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
@@ -60,16 +60,6 @@ app.get('/api/persons/:id', (request, response) => {
   } else {
     response.status(404).end()
   }
-})
-
-app.get('/info', (request, response) => {
-  let intfoTotalPersons = persons.length
-  let data = () => new Date().toISOString()
-  response.send(`
-  <h1> Phonebook has info for  ${intfoTotalPersons}  people</h1>
-  ${data()}
-  `
-  )
 })
 
 app.post('/api/persons', morgan(':method :url :status :res[content-length] - :response-time ms   :body'), (request, response) => {
@@ -94,6 +84,15 @@ app.post('/api/persons', morgan(':method :url :status :res[content-length] - :re
   response.status(201).json(newPerson)
 })
 
+app.get('/info', (request, response) => {
+  let intfoTotalPersons = persons.length
+  let data = () => new Date().toISOString()
+  response.send(`
+  <h1> Phonebook has info for  ${intfoTotalPersons}  people</h1>
+  ${data()}
+  `
+  )
+})
 
 app.delete('/api/persons/:id', (request, response) => {
   let id = Number(request.params.id)
@@ -102,7 +101,15 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = 3001
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+
+const PORT =  3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
